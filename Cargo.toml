@@ -13,10 +13,13 @@ license = "MIT"
 rustls = ["sqlx-core/runtime-async-std-rustls"]
 native-tls = ["sqlx-core/runtime-async-std-native-tls"]
 
+tracing = ["libtracing"]
+
 [dependencies]
 async-trait = "0.1.50"
 sqlx-core = { version = "0.5.2", default-features = false }
 tide = { version = "0.16.0", default-features = false }
+libtracing = { package = "tracing", version = "0.1.26", optional = true, default-features = false }
 
 [dev-dependencies]
 anyhow = "1.0.40"

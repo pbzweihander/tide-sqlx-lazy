@@ -2,6 +2,9 @@ use sqlx_core::database::Database;
 use sqlx_core::pool::{Pool, PoolConnection};
 use tide::{Middleware, Next, Request};
 
+#[cfg(feature = "tracing")]
+use libtracing::{info_span, Instrument};
+
 pub struct SqlxMiddleware<DB>
 where
     DB: Database,
@@ -67,7 +70,10 @@ pub trait SqlxRequestExt {
     where
         DB: Database,
     {
-        self.sqlx_pool().acquire().await
+        let acquire_fut = self.sqlx_pool().acquire();
+        #[cfg(feature = "tracing")]
+        let acquire_fut = acquire_fut.instrument(info_span!("Acquiring database connection"));
+        acquire_fut.await
     }
 }
 
