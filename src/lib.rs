@@ -30,12 +30,12 @@ where
     }
 }
 
-impl<DB> Into<Pool<DB>> for SqlxMiddleware<DB>
+impl<DB> From<SqlxMiddleware<DB>> for Pool<DB>
 where
     DB: Database,
 {
-    fn into(self) -> Pool<DB> {
-        self.pool
+    fn from(middleware: SqlxMiddleware<DB>) -> Self {
+        middleware.pool
     }
 }
 
