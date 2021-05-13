@@ -1,0 +1,56 @@
+name: tide-sqlx-lazy
+
+on:
+  pull_request:
+  push:
+    branches:
+    - main
+
+jobs:
+  fmt:
+    name: Rustfmt
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+    - run: rustup component add rustfmt
+    - uses: actions-rs/cargo@v1
+      with:
+        command: fmt
+        args: --all -- --check
+
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tls: [native-tls, rustls]
+        tracing: [tracing, notracing]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+    - run: rustup component add clippy
+    - uses: actions-rs/cargo@v1
+      with:
+        command: generate-lockfile
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-check-${{ matrix.tls }}-${{ matrix.tracing }}-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-check-${{ matrix.tls }}-${{ matrix.tracing }}-
+    - uses: actions-rs/cargo@v1
+      with:
+        command: clippy
+        args: --features ${{ matrix.tls}}${{ matrix.tracing == 'tracing' && ',tracing' || '' }} --all-targets -- -D warnings
