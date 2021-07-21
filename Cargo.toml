@@ -2,10 +2,10 @@
 name = "tide-sqlx-lazy"
 description = "lazy-connecting sqlx middleware for tide"
 version = "0.1.0"
-authors = ["Spoqa Creators <dev@spoqa.com>"]
+authors = ["Kangwook Lee <pbzweihander@gmail.com>"]
 edition = "2018"
-homepage = "https://github.com/spoqa/tide-sqlx-lazy"
-repository = "https://github.com/spoqa/tide-sqlx-lazy"
+homepage = "https://github.com/pbzweihander/tide-sqlx-lazy"
+repository = "https://github.com/pbzweihander/tide-sqlx-lazy"
 readme = "README.md"
 license = "MIT"
 
